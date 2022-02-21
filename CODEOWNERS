@@ -12,14 +12,14 @@
 # This should make it easy to add new rules without breaking existing ones.
 
 # poi
-/poi/** @hiryamada
+/apis/poi/** @hiryamada
 
 # trips
-/trips/** @yuhattor
+/apis/trips/** @yuhattor
 
 # user-java
-/user-java/** @hitarusa
+/apis/user-java/** @hitarusa
 
 # userprofile
-/userprofile/** @hiryamada
+/apis/userprofile/** @hiryamada
 
