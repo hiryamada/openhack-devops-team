@@ -96,13 +96,13 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          file: /home/runner/work/openhack-devops-team/openhack-devops-team/apis/user-java/Dockerfile
+          file: ./Dockerfile
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@0b651ed7546ecfc75024011f76944cb9b381ef1e
         with:
-          app-name: openhacknuy12391trips
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_USERJAVA}}
           images: 'ghcr.io/${{ steps.meta.outputs.tags }}'
 ##
