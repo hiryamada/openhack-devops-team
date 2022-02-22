@@ -46,7 +46,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: openhack-devops-team:latest
+          tags: hiryamada/openhack-devops-team:step4-yuhattor
           labels: ${{ steps.meta.outputs.labels }}
           file: /home/runner/work/openhack-devops-team/openhack-devops-team/apis/userprofile/Dockerfile
 
