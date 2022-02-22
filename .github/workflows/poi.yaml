@@ -41,4 +41,11 @@ jobs:
           context: ./apis/poi/web
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@0b651ed7546ecfc75024011f76944cb9b381ef1e
+        with:
+          app-name: openhacknuy12391poi
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_POI }}
+          images: 'ghcr.io/${{ steps.meta.outputs.tags }}'
