@@ -38,3 +38,14 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
+
+    - name: fail step
+      id: fail_step
+      run: exit 1
+
+    - name: run if fail_step failed
+      if: failure() && steps.fail_step.outcome == 'failure'
+      run: gh issue comment $ISSUE --body "Sample issue has been created"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        ISSUE: ${{ github.event.issue.html_url }}
