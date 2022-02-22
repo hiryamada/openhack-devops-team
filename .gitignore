@@ -303,3 +303,5 @@ __pycache__/
 
 .DS_Store
 .vscode/
+apis/userprofile/package-lock.json
+apis/userprofile/package-lock.json
