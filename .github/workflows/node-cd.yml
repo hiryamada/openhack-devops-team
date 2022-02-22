@@ -46,7 +46,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}/userprofile
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           file: /home/runner/work/openhack-devops-team/openhack-devops-team/apis/userprofile/Dockerfile
 
