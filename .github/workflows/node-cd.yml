@@ -46,7 +46,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: hiryamada/openhack-devops-team:step4-yuhattor
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           file: /home/runner/work/openhack-devops-team/openhack-devops-team/apis/userprofile/Dockerfile
 
@@ -56,5 +56,5 @@ jobs:
         with:
           app-name: openhacknuy12391userprofile
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_USERPROFILE }}
-          images: 'ghcr.io/${{ env.REPO }}:latest'
+          images: 'ghcr.io/${{ steps.meta.outputs.tags }}'
 
