@@ -38,3 +38,8 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
+    - if: failure()
+      run: gh issue create --title "My new issue" --body "Here are more details."
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        ISSUE: ${{ github.event.issue.html_url }}
