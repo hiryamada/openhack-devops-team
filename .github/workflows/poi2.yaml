@@ -55,11 +55,11 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Set outputs
+      - name: get sha
         id: vars
         run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
 
-      - name: Azure CLI script
+      - name: create slot
         uses: azure/CLI@v1
         with:
           azcliversion: 2.30.0
@@ -88,3 +88,10 @@ jobs:
           retry-delay: 10s # Optional, only applicable to max-attempts > 1
           # Retry all errors, including 404. This option might trigger curl upgrade.
           retry-all: false # Optional, defaults to "false"
+
+      - name: swap 
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.30.0
+          inlineScript: |
+            az webapp deployment slot swap -g openhacknuy12391rg -n openhacknuy12391poi --slot staging${{ steps.vars.outputs.sha_short }} --target-slot production
