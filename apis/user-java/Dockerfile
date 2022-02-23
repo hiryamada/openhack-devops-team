@@ -1,6 +1,6 @@
 # First stage to build the application
 FROM maven:3.6.3-openjdk-11-slim AS build-env
-ADD ./taru.pom.xml pom.xml
+ADD ./pom.xml pom.xml
 ADD ./src src/
 RUN mvn clean package
 
