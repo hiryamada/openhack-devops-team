@@ -1,0 +1,104 @@
+# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
+# For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
+
+name: poi
+
+on:
+  push:
+    branches:
+      - prod
+      - 'step5'
+      - 'step5/**'
+  pull_request:
+    branches:
+      - main
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}/poi
+
+jobs:
+
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: type=sha
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: ./apis/poi/web
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: get sha
+        id: vars
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
+      - name: create slot
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.30.0
+          inlineScript: |
+            az webapp deployment slot create -g openhacknuy12391rg -n openhacknuy12391poi --slot staging${{ steps.vars.outputs.sha_short }}
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@0b651ed7546ecfc75024011f76944cb9b381ef1e
+        with:
+          app-name: openhacknuy12391poi
+          images: 'ghcr.io/${{ steps.meta.outputs.tags }}'
+          slot-name: staging${{ steps.vars.outputs.sha_short }}
+          # publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_POI_STAGING }}
+
+      - name: Check the deployed service URL
+        uses: jtalk/url-health-check-action@v2
+        with:
+          # Check the following URLs one by one sequentially
+          url: https://openhacknuy12391poi-staging${{ steps.vars.outputs.sha_short }}.azurewebsites.net/api/docs/poi/index.html
+          # Follow redirects, or just report success on 3xx status codes
+          follow-redirect: false # Optional, defaults to "false"
+          # Fail this action after this many failed attempts
+          max-attempts: 30 # Optional, defaults to 1
+          # Delay between retries
+          retry-delay: 10s # Optional, only applicable to max-attempts > 1
+          # Retry all errors, including 404. This option might trigger curl upgrade.
+          retry-all: false # Optional, defaults to "false"
+
+      - name: swap 
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.30.0
+          inlineScript: |
+            az webapp deployment slot swap -g openhacknuy12391rg -n openhacknuy12391poi --slot staging${{ steps.vars.outputs.sha_short }} --target-slot production
+
+      - name: stop staging slot
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.30.0
+          inlineScript: |
+            az webapp stop -g openhacknuy12391rg -n openhacknuy12391poi --slot staging${{ steps.vars.outputs.sha_short }}
