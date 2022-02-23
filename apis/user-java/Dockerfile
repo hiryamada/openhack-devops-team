@@ -15,9 +15,9 @@ EXPOSE 8080
 #    https://vsupalov.com/docker-build-pass-environment-variables/
 ARG build_version="user-java default"
 
-ENV SQL_USER="YourUserName" \
-SQL_PASSWORD="changeme" \
-SQL_SERVER="changeme.database.windows.net" \
+ENV SQL_USER="demousersa" \
+SQL_PASSWORD="demo@pass123" \
+SQL_SERVER="openhacknuy12391sql.database.windows.net" \
 SQL_DBNAME="mydrivingDB" \
 APP_VERSION=$build_version 
 
