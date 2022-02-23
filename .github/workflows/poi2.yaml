@@ -79,7 +79,7 @@ jobs:
         uses: jtalk/url-health-check-action@v2
         with:
           # Check the following URLs one by one sequentially
-          url: https://openhacknuy12391poi-staging${{ steps.vars.outputs.sha_short }}.azurewebsites.net/api/healthcheck/poi
+          url: https://openhacknuy12391poi-staging${{ steps.vars.outputs.sha_short }}.azurewebsites.net/api/docs/poi/index.html
           # Follow redirects, or just report success on 3xx status codes
           follow-redirect: false # Optional, defaults to "false"
           # Fail this action after this many failed attempts
