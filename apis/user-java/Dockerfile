@@ -1,7 +1,7 @@
 # First stage to build the application
 FROM maven:3.6.3-openjdk-11-slim AS build-env
-ADD apis/user-java/pom.xml pom.xml
-ADD apis/user-java/src src/
+ADD ./pom.xml pom.xml
+ADD ./src src/
 RUN mvn clean package
 
 # build runtime image
