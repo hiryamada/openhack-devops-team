@@ -41,7 +41,7 @@ jobs:
           context: ./apis/user-java
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          file: ../../Dockerfile
+#          file: .Dockerfile
 
 #      - name: Deploy to Azure Web App
 #        id: deploy-to-webapp
