@@ -50,6 +50,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           file: /home/runner/work/openhack-devops-team/openhack-devops-team/apis/trips/Dockerfile
 
+
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@0b651ed7546ecfc75024011f76944cb9b381ef1e
@@ -57,4 +58,3 @@ jobs:
           app-name: openhacknuy12391trips
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_TRIPS}}
           images: 'ghcr.io/${{ steps.meta.outputs.tags }}'
-
