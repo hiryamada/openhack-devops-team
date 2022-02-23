@@ -55,6 +55,6 @@ jobs:
         uses: azure/webapps-deploy@0b651ed7546ecfc75024011f76944cb9b381ef1e
         with:
           app-name: openhacknuy12391poi
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_POI }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_POI_STAGING }}
           images: 'ghcr.io/${{ steps.meta.outputs.tags }}'
           slot-name: staging
