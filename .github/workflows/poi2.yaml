@@ -50,6 +50,22 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
 
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set outputs
+        id: vars
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
+      - name: Azure CLI script
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.30.0
+          inlineScript: |
+            az webapp deployment slot create -g openhacknuy12391rg -n openhacknuy12391poi --slot staging${{ steps.vars.outputs.sha_short }}
+
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@0b651ed7546ecfc75024011f76944cb9b381ef1e
@@ -57,13 +73,13 @@ jobs:
           app-name: openhacknuy12391poi
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_POI_STAGING }}
           images: 'ghcr.io/${{ steps.meta.outputs.tags }}'
-          slot-name: staging
+          slot-name: staging${{ steps.vars.outputs.sha_short }}
 
       - name: Check the deployed service URL
         uses: jtalk/url-health-check-action@v2
         with:
           # Check the following URLs one by one sequentially
-          url: https://openhacknuy12391poi-staging.azurewebsites.net/api/healthcheck/poi
+          url: https://openhacknuy12391poi-staging${{ steps.vars.outputs.sha_short }}.azurewebsites.net/api/healthcheck/poi
           # Follow redirects, or just report success on 3xx status codes
           follow-redirect: false # Optional, defaults to "false"
           # Fail this action after this many failed attempts
