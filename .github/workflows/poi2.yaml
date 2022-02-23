@@ -6,7 +6,7 @@ name: poi
 on:
   push:
     branches:
-      - main
+      - prod
       - 'step5'
       - 'step5/**'
   pull_request:
